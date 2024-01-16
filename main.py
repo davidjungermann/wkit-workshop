@@ -4,6 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from datetime import datetime
 from pydantic import BaseModel
+from typing import List
 
 DATABASE_URL = "sqlite:///./test.db"
 
@@ -54,6 +55,14 @@ async def create_product(product_request: ProductRequest, db: Session = Depends(
     db.commit()
     db.refresh(product)
     return ProductResponse(id=product.id, name=product.name, category=product.category, price=product.price)
+
+
+@app.get("/products/", response_model=List[ProductResponse])
+async def get_products(db: Session = Depends(get_db)):
+    # Query the database to get all products
+    products = db.query(Product).all()
+    # Convert the products to a list of ProductResponse models
+    return [ProductResponse(id=product.id, name=product.name, category=product.category, price=product.price) for product in products]
 
 @app.get("/health")
 async def health():
