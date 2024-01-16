@@ -8,8 +8,7 @@ from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-# Reuse your existing model definitions and database URL
-from main import Product, Base, DATABASE_URL  # Import from your FastAPI file
+from main import Product, Base, DATABASE_URL, Order, OrderDetail
 
 # Create an engine and session
 engine = create_engine(DATABASE_URL)
@@ -45,6 +44,42 @@ def create_books():
     # Close the session
     db.close()
 
+def create_orders():
+    db = SessionLocal()
+
+    # Retrieve all products for simplicity
+    products = db.query(Product).all()
+    num_products = len(products)
+
+    # Create 50 orders
+    for _ in range(50):
+        new_order = Order(timestamp=datetime.utcnow())
+        db.add(new_order)
+        db.commit()
+        db.refresh(new_order)
+
+        # Randomly decide how many products this order will have
+        num_order_products = random.randint(1, 5)  # Up to 5 products per order
+
+        total_price = 0
+        for _ in range(num_order_products):
+            # Randomly select a product and quantity
+            selected_product = random.choice(products)
+            quantity = random.randint(1, 3)  # Up to 3 quantity per product
+
+            # Calculate total price for this product
+            total_price += selected_product.price * quantity
+
+            # Create order detail
+            order_detail = OrderDetail(order_id=new_order.id, product_id=selected_product.id, quantity=quantity)
+            db.add(order_detail)
+
+        # Update the total price of the order
+        new_order.total_price = total_price
+        db.commit()
+
+    db.close()
+
 # Function to create the tables
 def create_tables():
     Base.metadata.create_all(engine)
@@ -53,6 +88,7 @@ def create_tables():
 def main():
     create_tables()
     create_books()
+    create_orders()
 
 if __name__ == "__main__":
     main()
