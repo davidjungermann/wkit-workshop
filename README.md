@@ -1,6 +1,6 @@
 # Amalone Books Python API
 
-## Running in Codesandbox
+## Running in Codesandbox - this part is correct and you can trust it <3
 
 1. Install dependencies:
 ```console
@@ -24,8 +24,8 @@ Ensure that you get `OK` back.
 pytest .
 ```
 
-
-
+## Architecture
+This project uses Django, SQLAlchemy and SQLite to set up an API that serves a e-commerce store where users can buy books.
 
 ## Prerequisites for local development
 1. Install Python
