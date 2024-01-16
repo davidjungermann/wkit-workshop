@@ -1,5 +1,5 @@
-from fastapi import FastAPI, Depends
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from datetime import datetime
@@ -63,6 +63,17 @@ async def get_products(db: Session = Depends(get_db)):
     products = db.query(Product).all()
     # Convert the products to a list of ProductResponse models
     return [ProductResponse(id=product.id, name=product.name, category=product.category, price=product.price) for product in products]
+
+@app.get("/products/{product_id}")
+async def get_product(product_id: str, db: Session = Depends(get_db)):
+    query = text(f"SELECT * FROM products WHERE id = {product_id}")
+    result = db.execute(query)
+    product = result.fetchone()
+
+    if product:
+        return product
+    else:
+        raise HTTPException(status_code=404, detail="Product not found")
 
 @app.get("/health")
 async def health():
