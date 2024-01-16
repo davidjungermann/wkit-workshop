@@ -53,3 +53,8 @@ async def create_product(product: Product, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(product)
     return product
+
+
+@app.get("/health")
+async def health():
+    return {"message": "OK"}
