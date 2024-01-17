@@ -14,5 +14,5 @@ class OrderRequest(BaseModel):
 class OrderResponse(BaseModel):
     id: int
     timestamp: datetime
-    total_price: int
+    total_price: Optional[int]
     products: List[ProductResponse]
