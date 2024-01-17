@@ -6,14 +6,14 @@ from sqlalchemy.orm import sessionmaker
 
 from config import DATABASE_URL
 from db.database import Base
-from models.order import Order, OrderDetail
+from models.order import Order
 from models.product import Product
 
 # Create an engine and session
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 
-# Book categories (genres)
+# Book categories
 categories = [
     "Fiction",
     "Non-Fiction",
@@ -27,7 +27,7 @@ categories = [
     "Educational",
 ]
 
-# List of 20 words to use in book titles
+# List of words for book titles
 words = [
     "Secret",
     "Journey",
@@ -52,53 +52,41 @@ words = [
 ]
 
 
-# Function to generate a creative book name
 def generate_book_name():
     return " ".join(random.sample(words, 3))
 
 
-# Function to create books
 def create_books():
     db = SessionLocal()
-
     for _ in range(100):
         book_name = generate_book_name()
         category = random.choice(categories)
-        price = round(random.uniform(5.99, 25.99), 2)
-
+        price = round(random.uniform(5.99, 25.99) * 100)  # Convert to cents
         book = Product(name=book_name, category=category, price=price)
         db.add(book)
-
     db.commit()
     db.close()
 
 
 def create_orders():
     db = SessionLocal()
-
     products = db.query(Product).all()
-
     for _ in range(50):
-        new_order = Order(timestamp=datetime.utcnow(), total_price=0)
+        new_order = Order(timestamp=datetime.utcnow())
         db.add(new_order)
         db.commit()
         db.refresh(new_order)
 
-        total_price = 0
+        added_product_ids = set()  # Keep track of added products
+
         for _ in range(random.randint(1, 5)):
             selected_product = random.choice(products)
-            quantity = random.randint(1, 3)
 
-            total_price += selected_product.price * quantity
+            if selected_product.id not in added_product_ids:
+                new_order.products.append(selected_product)
+                added_product_ids.add(selected_product.id)
 
-            order_detail = OrderDetail(
-                order_id=new_order.id, product_id=selected_product.id, quantity=quantity
-            )
-            db.add(order_detail)
-
-        new_order.total_price = total_price
         db.commit()
-
     db.close()
 
 

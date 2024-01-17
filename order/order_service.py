@@ -1,8 +1,7 @@
-from typing import List, Optional
+from typing import List
 
 from fastapi import HTTPException
 
-from models.order import OrderDetail
 from models.product import Product
 from order.order_repository import OrderRepository
 from schemas.order import OrderRequest, OrderResponse, ProductResponse
@@ -17,13 +16,14 @@ class OrderService:
 
         total_price = 0
         products_response = []
-        for product_id, quantity in zip(request.products, request.quantities):
+        for product_id in request.products:
             product = self.repository.get_product_by_id(product_id)
             if not product:
                 raise ValueError(f"Product with id {product_id} not found")
 
-            total_price += product.price * quantity
-            self.repository.add_order_detail(new_order.id, product.id, quantity)
+            total_price += product.price
+            # TODO: Remove ignore for use of SQLAlchemy type system when not in beta
+            new_order.products.append(product)  # type: ignore
             products_response.append(
                 ProductResponse(
                     id=product.id,
@@ -43,24 +43,44 @@ class OrderService:
             id=order.id,
             timestamp=order.timestamp,
             total_price=order.total_price,
-            products=order.products,
+            products=[
+                ProductResponse(
+                    id=product.id,
+                    name=product.name,
+                    category=product.category,
+                    price=product.price,
+                )
+                # TODO: Remove ignore for use of SQLAlchemy type system when not in beta
+                for product in order.products  # type: ignore
+            ],
         )
 
     def get_all_orders(self) -> List[OrderResponse]:
         orders = self.repository.get_all_orders()
         order_responses: List[OrderResponse] = []
         for order in orders:
+            product_responses = [
+                ProductResponse(
+                    id=product.id,
+                    name=product.name,
+                    category=product.category,
+                    price=product.price,
+                )
+                # TODO: Remove ignore for use of SQLAlchemy type system when not in beta
+                for product in order.products  # type: ignore
+            ]
+
             order_responses.append(
                 OrderResponse(
                     id=order.id,
                     timestamp=order.timestamp,
                     total_price=order.total_price,
-                    products=order.products,
+                    products=product_responses,
                 )
             )
         return order_responses
 
-    def get_order_by_id(self, order_id: int) -> Optional[OrderResponse]:
+    def get_order_by_id(self, order_id: int) -> OrderResponse:
         order = self.repository.get_order_by_id(order_id)
 
         if not order:
@@ -70,5 +90,14 @@ class OrderService:
             id=order.id,
             timestamp=order.timestamp,
             total_price=order.total_price,
-            products=order.products,
+            products=[
+                ProductResponse(
+                    id=product.id,
+                    name=product.name,
+                    category=product.category,
+                    price=product.price,
+                )
+                # TODO: Remove ignore for use of SQLAlchemy type system when not in beta
+                for product in order.products  # type: ignore
+            ],
         )

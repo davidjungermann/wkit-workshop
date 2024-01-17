@@ -1,11 +1,9 @@
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
-from sqlalchemy.sql.schema import Column
 
-from models.order import Order, OrderDetail
+from models.order import Order
 from models.product import Product
-from schemas.order import OrderRequest, OrderResponse, ProductResponse
 
 
 class OrderRepository:
@@ -19,12 +17,11 @@ class OrderRepository:
         self.db.refresh(new_order)
         return new_order
 
-    def add_order_detail(self, order_id: int, product_id: int, quantity: int):
-        order_detail = OrderDetail(
-            order_id=order_id, product_id=product_id, quantity=quantity
-        )
-        self.db.add(order_detail)
-        self.db.commit()
+    def add_product_to_order(self, order: Order, product: Product):
+        # TODO: Remove ignore for use of SQLAlchemy type system when not in beta
+        if product not in order.products:  # type: ignore
+            order.products.append(product)  # type: ignore
+            self.db.commit()
 
     def update_order_total_price(self, order_id: int, total_price: int):
         order = self.db.query(Order).filter(Order.id == order_id).first()
