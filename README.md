@@ -55,4 +55,11 @@ pre-commit run --all
 
 This uses **Black** for formatting, **isort** for import formatting and **mypy** for static linting and type checking. 
 
+## TODO
+- Add CI/CD for deployment
+- Run tests remotely in a Github Action
+- Update Pydantic typing to match new version of SQLAlchemy typing
+- Set up dedicated test database for integration testing
+- Extend unit tests to reach higher coverage
+
 
