@@ -1,19 +1,29 @@
 repos:
   - repo: https://github.com/psf/black
-    rev: 23.12.1  # Ensure this is the latest version
+    rev: 23.12.1
     hooks:
       - id: black
         language_version: python3.11
 
   - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2  # Ensure this is the latest version
+    rev: 5.13.2
     hooks:
       - id: isort
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0  # Ensure this is the latest version
+    rev: v1.8.0
     hooks:
       - id: mypy
         additional_dependencies:
           - "pydantic>=2.5.3"
           - "sqlalchemy-stubs>=0.4"
+
+  # Adding pytest to pre-commit hooks
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: pytest
+        language: system
+        types: [python]
+        stages: [commit]
