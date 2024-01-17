@@ -15,12 +15,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Amalone API", lifespan=lifespan)
 
-# Include routers from different modules
 app.include_router(order_router, prefix="/orders", tags=["orders"])
 app.include_router(product_router, prefix="/products", tags=["products"])
 
 
-# Health Check Endpoint
 @app.get("/health")
 async def health_check():
     try:
@@ -28,8 +26,6 @@ async def health_check():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
-# Additional configurations or middleware can be added here
 
 if __name__ == "__main__":
     import uvicorn

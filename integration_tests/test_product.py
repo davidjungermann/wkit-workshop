@@ -34,7 +34,7 @@ def test_get_products():
 
 
 def test_get_product():
-    product_id = 1  # Replace with a valid product ID
+    product_id = 1
     response = client.get(f"/products/{product_id}")
     assert response.status_code == 200
     product = response.json()
@@ -45,9 +45,6 @@ def test_get_product():
 
 
 def test_get_product_not_found():
-    product_id = 9999  # Assuming this product does not exist
+    product_id = 9999
     response = client.get(f"/products/{product_id}")
     assert response.status_code == 404
-
-
-# More tests can be added as needed...

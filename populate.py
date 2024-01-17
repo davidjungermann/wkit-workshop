@@ -9,11 +9,9 @@ from db.database import Base
 from models.order import Order
 from models.product import Product
 
-# Create an engine and session
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 
-# Book categories
 categories = [
     "Fiction",
     "Non-Fiction",
@@ -27,7 +25,6 @@ categories = [
     "Educational",
 ]
 
-# List of words for book titles
 words = [
     "Secret",
     "Journey",

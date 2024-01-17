@@ -2,8 +2,8 @@ from typing import List
 
 from fastapi import HTTPException
 
-from product.product_repository import ProductRepository  # To be created
-from schemas.product import ProductRequest, ProductResponse  # Your Pydantic models
+from product.product_repository import ProductRepository
+from schemas.product import ProductRequest, ProductResponse
 
 
 class ProductService:

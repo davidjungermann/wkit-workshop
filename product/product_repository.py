@@ -2,8 +2,7 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
-from models.product import Product  # Assuming your SQLAlchemy Product model is here
-from schemas.product import ProductRequest, ProductResponse  # Your Pydantic models
+from models.product import Product
 
 
 class ProductRepository:
