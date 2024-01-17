@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from config import DATABASE_URL
-from models import Base
+from db.database import Base
 from models.order import Order, OrderDetail
 from models.product import Product
 

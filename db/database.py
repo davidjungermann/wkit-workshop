@@ -11,7 +11,7 @@ Base = declarative_base()
 
 
 def init_db():
-    import models.order  # Import all your models
+    import models.order
     import models.product
 
     Base.metadata.create_all(bind=engine)

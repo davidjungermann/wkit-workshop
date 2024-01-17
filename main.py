@@ -1,15 +1,19 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
 from db.database import init_db
 from order.order_controller import router as order_router
 from product.product_controller import router as product_router
 
-app = FastAPI(title="Amalone API")
 
-
-@app.on_event("startup")
-async def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     init_db()
+    yield
+
+
+app = FastAPI(title="Amalone API", lifespan=lifespan)
 
 
 # Include routers from different modules
