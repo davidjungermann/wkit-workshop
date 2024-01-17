@@ -9,5 +9,3 @@ class Product(Base):
     name = Column(String, nullable=False)
     category = Column(String, nullable=False)
     price = Column(Integer, nullable=False)
-
-    # Add any additional fields or relationships here
