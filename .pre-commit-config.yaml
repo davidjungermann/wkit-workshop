@@ -18,7 +18,6 @@ repos:
           - "pydantic>=2.5.3"
           - "sqlalchemy-stubs>=0.4"
 
-  # Adding pytest to pre-commit hooks
   - repo: local
     hooks:
       - id: pytest
