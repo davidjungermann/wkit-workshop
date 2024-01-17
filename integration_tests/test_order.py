@@ -5,6 +5,7 @@ from main import app
 client = TestClient(app)
 
 
+# TODO: Let integration tests run towards dedicated database
 def test_create_order():
     order_data = {
         "products": [1, 2],

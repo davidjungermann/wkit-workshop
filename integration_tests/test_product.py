@@ -5,6 +5,7 @@ from main import app
 client = TestClient(app)
 
 
+# TODO: Let integration tests run towards dedicated database
 def test_create_product():
     product_data = {
         "name": "Sample Product",
