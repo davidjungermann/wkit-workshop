@@ -32,7 +32,7 @@ python populate.py
 6.
 Ensure you get products:
 ```console
-curl 127.0.0.1:8000/products
+curl 127.0.0.1:8000/products/
 ```
 
 ## Introduction
