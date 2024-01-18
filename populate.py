@@ -1,6 +1,6 @@
 #
 # Hej folk från WKIT! Ni behöver inte titta på denna fil.
-# Den funkar som tänkt! :)
+# Den funkar tillräckligt bra! :)
 #
 
 import random
@@ -15,15 +15,48 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 
 # Book categories (genres)
-categories = ["Fiction", "Non-Fiction", "Science Fiction", "Fantasy", "Mystery", "Historical", "Biography", "Children's", "Self-Help", "Educational"]
+categories = [
+    "Fiction",
+    "Non-Fiction",
+    "Science Fiction",
+    "Fantasy",
+    "Mystery",
+    "Historical",
+    "Biography",
+    "Children's",
+    "Self-Help",
+    "Educational",
+]
 
 # List of 20 words to use in book titles
-words = ["Secret", "Journey", "Mystery", "Lost", "Shadow", "Fire", "Dream", "Eternal", "Star", "Moon",
-         "Heart", "Sky", "Ocean", "Whisper", "Legend", "Silent", "Wild", "Ancient", "Twilight", "Garden"]
+words = [
+    "Secret",
+    "Journey",
+    "Mystery",
+    "Lost",
+    "Shadow",
+    "Fire",
+    "Dream",
+    "Eternal",
+    "Star",
+    "Moon",
+    "Heart",
+    "Sky",
+    "Ocean",
+    "Whisper",
+    "Legend",
+    "Silent",
+    "Wild",
+    "Ancient",
+    "Twilight",
+    "Garden",
+]
+
 
 # Function to generate a creative book name
 def generate_book_name():
-    return ' '.join(random.sample(words, 3))
+    return " ".join(random.sample(words, 3))
+
 
 # Function to create books
 def create_books():
@@ -43,6 +76,7 @@ def create_books():
 
     # Close the session
     db.close()
+
 
 def create_orders():
     db = SessionLocal()
@@ -71,7 +105,9 @@ def create_orders():
             total_price += selected_product.price * quantity
 
             # Create order detail
-            order_detail = OrderDetail(order_id=new_order.id, product_id=selected_product.id, quantity=quantity)
+            order_detail = OrderDetail(
+                order_id=new_order.id, product_id=selected_product.id, quantity=quantity
+            )
             db.add(order_detail)
 
         # Update the total price of the order
@@ -80,15 +116,18 @@ def create_orders():
 
     db.close()
 
+
 # Function to create the tables
 def create_tables():
     Base.metadata.create_all(engine)
+
 
 # Main function
 def main():
     create_tables()
     create_books()
     create_orders()
+
 
 if __name__ == "__main__":
     main()
